@@ -48,4 +48,12 @@ public class PlayerMovement : MonoBehaviour
     {
         _rb.MovePosition(_rb.position + _movement * _moveSpeed * Time.fixedDeltaTime);
     }
+    public void IncreaseSpeed(float value)
+    {
+        _moveSpeed += value;
+    }
+    public void DecreaseSpeed(float value)
+    {
+        _moveSpeed -= value;
+    }
 }

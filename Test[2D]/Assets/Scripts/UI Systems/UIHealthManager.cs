@@ -8,7 +8,7 @@ public class UIHealthManager : MonoBehaviour
     private List<RawImage> _imagesList;
     public void UpdateHealthUI(int healthAmount)
     {
-        for (int i = _imagesList.Count; i >0; i--)
+        for (int i = _imagesList.Count-1; i >0; i--)
         {
             if (i < healthAmount)
             {
