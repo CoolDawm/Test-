@@ -10933,7 +10933,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _moveSpeed: 5
-  _useGyro: 0
+  _useGyro: 1
 --- !u!50 &1348395312
 Rigidbody2D:
   serializedVersion: 5

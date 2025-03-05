@@ -1,6 +1,7 @@
 using Terresquall;
 using UnityEngine;
 using UnityEngine.InputSystem;
+
 [RequireComponent(typeof(PlayerInput))]
 public class PlayerMovement : MonoBehaviour
 {
@@ -13,20 +14,18 @@ public class PlayerMovement : MonoBehaviour
     private Vector2 _movement;
     private PlayerInput _playerInput;
     private InputAction _moveAction;
-    private InputAction _gyroAction;
+    private UnityEngine.Gyroscope _gyro;
 
     void Start()
     {
         _rb = GetComponent<Rigidbody2D>();
         _playerInput = GetComponent<PlayerInput>();
         _moveAction = _playerInput.actions["Move"];
-        if (_useGyro)
+
+        if (_useGyro && SystemInfo.supportsGyroscope)
         {
-            _gyroAction = _playerInput.actions["Gyro"];
-            if (SystemInfo.supportsGyroscope)
-            {
-                InputSystem.EnableDevice(UnityEngine.InputSystem.Gyroscope.current);
-            }
+            _gyro = Input.gyro;
+            _gyro.enabled = true;
         }
     }
 
@@ -34,11 +33,13 @@ public class PlayerMovement : MonoBehaviour
     {
         Vector2 joystickInput = VirtualJoystick.GetAxis();
         _movement = joystickInput;
-        if (_useGyro && _gyroAction != null)
+
+        if (_useGyro && _gyro != null)
         {
-            Vector3 gyroInput = _gyroAction.ReadValue<Vector3>();
+            Vector3 gyroInput = _gyro.rotationRateUnbiased;
             _movement += new Vector2(gyroInput.x, gyroInput.y);
         }
+
         Vector2 keyboardInput = _moveAction.ReadValue<Vector2>();
         _movement += keyboardInput;
         _movement = _movement.normalized;
@@ -48,10 +49,12 @@ public class PlayerMovement : MonoBehaviour
     {
         _rb.MovePosition(_rb.position + _movement * _moveSpeed * Time.fixedDeltaTime);
     }
+
     public void IncreaseSpeed(float value)
     {
         _moveSpeed += value;
     }
+
     public void DecreaseSpeed(float value)
     {
         _moveSpeed -= value;
